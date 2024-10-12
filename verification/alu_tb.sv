@@ -48,7 +48,7 @@ class alu_test extends uvm_test;
 endclass
 
 // Testbench top module
-module tb_alu;
+module alu_tb;
   initial begin
     alu_test t = alu_test::type_id::create("t");
     t.start(null);

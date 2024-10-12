@@ -19,9 +19,9 @@ find_git_root() {
 ROOT_REPO=$(find_git_root)
 
 # Define container name and image name
-CONTAINER_NAME="your_container_name"  # Change this to your desired container name
-IMAGE_NAME="your_image_name"           # Change this to your Docker image name
+CONTAINER_NAME="verilator_container"  # Change this to your desired container name
+IMAGE_NAME="chip_env"           # Change this to your Docker image name
 
 # Run the Docker container with the volume mounted
-docker run -v "$ROOT_REPO":/mnt/repo --name "$CONTAINER_NAME" -it "$IMAGE_NAME"
+docker run --rm -v "$ROOT_REPO":/mnt/repo --name "$CONTAINER_NAME" -it "$IMAGE_NAME"
 
