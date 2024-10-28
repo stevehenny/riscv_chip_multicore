@@ -1,14 +1,19 @@
 
 # Define variables
 VERILATOR = verilator
-VERILATOR_FLAGS = --sv --trace -Iinclude -Ienv
+VERILATOR_FLAGS = --sv --trace -Iinclude -Ienv -I$(UVM_SRC)
 SRC_DIR = src
 TB_DIR = verification
 BUILD_DIR = build
+INCLUDE_DIR = include
 
 # Source and testbench files
 ALU_SRC = $(SRC_DIR)/alu.sv
 TB_SRC = $(TB_DIR)/alu_tb.sv
+UVM_SRC = $(INCLUDE_DIR)/UVM/1.2/src
+
+#uvm source code:
+
 
 # Output executable name
 OUTPUT = alu_tb

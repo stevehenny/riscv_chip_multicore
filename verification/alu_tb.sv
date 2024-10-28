@@ -1,6 +1,6 @@
 
 `timescale 1ns / 1ps
-
+`include "uvm_macros.svh"  // Include UVM macros
 import uvm_pkg::*;
 
 class alu_test extends uvm_test;
