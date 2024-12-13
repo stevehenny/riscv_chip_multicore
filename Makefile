@@ -1,6 +1,6 @@
 # Verilator settings
 VERILATOR = verilator
-VFLAGS = -Wall -Wno-fatal --cc --exe --build --trace --timing --timescale "1ns/1ps" -sv
+VFLAGS = -Wall -Wno-fatal --binary --exe --build --trace --timing --timescale "1ns/1ps" -sv
 
 # UVM settings
 # UVM_DIR = ./uvm_src/src
