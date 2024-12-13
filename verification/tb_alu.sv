@@ -1,56 +1,49 @@
-
 `timescale 1ns / 1ps
 
-import uvm_pkg::*;
+// Remove the import for uvm_pkg as Verilator doesn't support UVM
+// import uvm_pkg::*; // Remove this line
 
-class alu_test extends uvm_test;
-  `uvm_component_utils(alu_test)
+module tb_alu;
 
-  // UVM configuration objects
-  logic [31:0] op1;
-  logic [31:0] op2;
-  logic [31:0] result;
+  // Parameters and signals
+  parameter WIDTH = 32;
+  logic [WIDTH-1:0] op1, op2, result;
   logic [6:0] opcode;
   logic [2:0] funct3;
   logic [6:0] funct7;
-  logic zero;
+  logic zero, status;
 
-  alu dut;  // Instantiate the ALU
+  // Instantiate the ALU
+  alu #(WIDTH) dut (
+      .op1(op1),
+      .op2(op2),
+      .result(result),
+      .opcode(opcode),
+      .funct7(funct7),
+      .funct3(funct3),
+      .zero(zero),
+      .status(status)
+  );
 
-  function new(string name, uvm_component parent);
-    super.new(name, parent);
-  endfunction
-
-  virtual function void build_phase(uvm_phase phase);
-    super.build_phase(phase);
-    // Instantiate the ALU module
-    dut = alu::type_id::create("dut", this);
-  endfunction
-
-  virtual function void run_phase(uvm_phase phase);
-    // Test various ALU operations
-    opcode = OP;  // Set opcode for R-type instructions
-    op1 = 32'h00000005;  // Example operands
-    op2 = 32'h00000003;
+  // Main test procedure
+  initial begin
+    // Initialize values
+    opcode = 7'b0000000;  // Example opcode
+    op1    = 32'h00000005;  // Example operand 1
+    op2    = 32'h00000003;  // Example operand 2
 
     // Test ADD operation
-    funct3 = ADDFUNCT3;
-    funct7 = ADDFUNCT7;
+    funct3 = 3'b000;  // Example funct3 for ADD
+    funct7 = 7'b0000000;  // Example funct7 for ADD
     #10;  // Wait for ALU to compute
-    assert (dut.result == 32'h00000008)
+    assert (result == 32'h00000008)
     else $fatal("ADD failed!");
 
-    // Add more tests for other operations...
+    // Add more tests for other operations here...
 
     // Indicate completion
     $display("All tests passed!");
-  endfunction
-endclass
-
-// Testbench top module
-module tb_alu;
-  initial begin
-    alu_test t = alu_test::type_id::create("t");
-    t.start(null);
+    $finish;  // End the simulation
   end
+
 endmodule
