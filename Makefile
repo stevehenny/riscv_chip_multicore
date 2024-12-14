@@ -1,6 +1,6 @@
 # Verilator settings
 VERILATOR = verilator
-VFLAGS = -Wall -Wno-fatal --binary --exe --build --trace --timing --timescale "1ns/1ps" -sv
+VFLAGS = -Wall -Wno-fatal --binary --trace --exe --build --timing --timescale "1ns/1ps" -sv
 
 # UVM settings
 # UVM_DIR = ./uvm_src/src
@@ -39,4 +39,4 @@ clean:
 # Run the simulation
 .PHONY: run
 run: $(EXE_NAME)
-	./$(EXE_NAME)
+	./$(EXE_NAME) +trace
