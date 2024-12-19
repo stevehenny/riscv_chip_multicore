@@ -52,7 +52,7 @@ $timescale 1ps $end
    $var wire 7 ' funct7 [6:0] $end
    $var wire 1 ) zero $end
    $var wire 1 + status $end
-   $var wire 32 , SHIFT_WIDTH [31:0] $end
+   $var wire 32 , SHIFTWIDTH [31:0] $end
    $var wire 7 - OP [6:0] $end
    $var wire 7 . OPIMM [6:0] $end
    $var wire 3 / ADDFUNCT3 [2:0] $end

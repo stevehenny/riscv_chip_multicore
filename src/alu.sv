@@ -13,7 +13,7 @@ module alu #(
 
   `include "include/opcode_constants.sv"
 
-  localparam SHIFT_WIDTH = $clog2(WIDTH);
+  localparam SHIFTWIDTH = $clog2(WIDTH);
 
 
   always_comb begin
@@ -34,11 +34,11 @@ module alu #(
           ANDFUNCT3: result = op1 & op2;
           ORFUNCT3: result = op1 | op2;
           XORFUNCT3: result = op1 ^ op2;
-          SLLFUNCT3: result = op1 << op2[SHIFT_WIDTH-1:0];
+          SLLFUNCT3: result = op1 << op2[SHIFTWIDTH-1:0];
           SRLFUNCT3: begin
             case (funct7)
-              SRLFUNCT7: result = op1 >> op2[SHIFT_WIDTH-1:0];
-              SRAFUNCT7: result = $signed(op1) >>> op2[SHIFT_WIDTH-1:0];
+              SRLFUNCT7: result = op1 >> op2[SHIFTWIDTH-1:0];
+              SRAFUNCT7: result = $signed(op1) >>> op2[SHIFTWIDTH-1:0];
               default:   result = {WIDTH{1'b0}};
             endcase
           end
@@ -72,11 +72,11 @@ module alu #(
           ANDFUNCT3: result = op1 & op2;
           ORFUNCT3: result = op1 | op2;
           XORFUNCT3: result = op1 ^ op2;
-          SLLFUNCT3: result = op1 << op2[SHIFT_WIDTH-1:0];
+          SLLFUNCT3: result = op1 << op2[SHIFTWIDTH-1:0];
           SRLFUNCT3: begin
             case (funct7)
-              7'b0000000: result = op1 >> op2[SHIFT_WIDTH-1:0];
-              7'b0100000: result = $signed(op1) >>> op2[SHIFT_WIDTH-1:0];
+              7'b0000000: result = op1 >> op2[SHIFTWIDTH-1:0];
+              7'b0100000: result = $signed(op1) >>> op2[SHIFTWIDTH-1:0];
               default: result = {WIDTH{1'b0}};
             endcase
           end
