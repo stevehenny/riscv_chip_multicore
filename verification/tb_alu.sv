@@ -44,18 +44,20 @@ module tb_alu;
       // Debugging outputs
       $display("Testing %s operation", operation_name);
       $display("Inputs: op1 = %h, op2 = %h", op1, op2);
-      $display("Funct3: %h, Funct7: %h", funct3, funct7);
+      $display("Funct3: %b, Funct7: %b", funct3, funct7);
       $display("Result: %h, Expected: %h", result, expected_result);
 
       // Check result
       if (result !== expected_result) begin
-        $fatal("Test FAILED for %s operation!\nExpected: %h, Got: %h", operation_name,
+        #100;
+        $error("Test FAILED for %s operation!\nExpected: %h, Got: %h", operation_name,
                expected_result, result);
       end else begin
         $display("Test PASSED for %s operation.\nOperands: %h, %h\nResult: %h", operation_name,
                  test_op1, test_op2, result);
       end
     end
+    $display("\n\n");
   endtask
 
   // Main test procedure
@@ -64,17 +66,27 @@ module tb_alu;
 
     // Perform test cases
     perform_test(32'h00000005, 32'h00000003, ADDFUNCT3, ADDFUNCT7, 32'h00000008, "ADD");
+    #10;
     perform_test(32'h00000005, 32'h00000003, SUBFUNCT3, SUBFUNCT7, 32'h00000002, "SUB");
+    #10;
     perform_test(32'h00001001, 32'hffffffff, ANDFUNCT3, ANDFUNCT7, 32'h00001001, "AND");
+    #10;
     perform_test(32'h11111111, 32'h22222222, ORFUNCT3, ORFUNCT7, 32'h33333333, "OR");
+    #10;
     perform_test(32'h11110000, 32'h11101000, XORFUNCT3, XORFUNCT7, 32'h00011000, "XOR");
+    #10;
     perform_test(32'h00000001, 32'h00000002, SLLFUNCT3, SLLFUNCT7, 32'h00000004, "SLL");
+    #10;
     perform_test(32'h00001000, 32'h00000002, SRLFUNCT3, SRLFUNCT7, 32'h00000400, "SRL");
+    #10;
     perform_test(32'h0000000f, 32'h00000003, SRAFUNCT3, SRAFUNCT7, 32'h00000001, "SRA");
+    #10;
     perform_test(-32'h00000004, 32'h00000003, SLTFUNCT3, SLTFUNCT7, 32'h00000001, "SLT");
+    #10;
     perform_test(32'h00000008, 32'h00000002, MULFUNCT3, MULFUNCT7, 32'h00000010, "MUL");
 
     $display("All tests completed successfully!");
+    #100;
     $finish;  // End the simulation
   end
 

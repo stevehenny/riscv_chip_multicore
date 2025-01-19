@@ -45,8 +45,8 @@ module alu #(
           SLTFUNCT3: result = ($signed(op1) < $signed(op2)) ? {1'b1} : {WIDTH{1'b0}};
           SLTUFUNCT3: result = (op1 < op2) ? {1'b1} : {WIDTH{1'b0}};
           MULFUNCT3: begin
-            case (funct7)
-              MULFUNCT7: result = op1 * op2;
+            case (funct7)  // NOTE: doesn't seem to ever hit this case which is why I get 0
+              MULFUNCT7: result = $signed(op1) * $signed(op2);
               default:   result = {WIDTH{1'b0}};
             endcase
           end
