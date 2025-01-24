@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module alu #(
     parameter WIDTH = 32
 ) (
@@ -11,7 +13,6 @@ module alu #(
     output logic status
 );
 
-  `include "include/opcode_constants.sv"
 
   localparam SHIFTWIDTH = $clog2(WIDTH);
 
@@ -22,18 +23,31 @@ module alu #(
     status = 1'b0;  // Default unused status
 
     case (opcode)
-      OP: begin
+      RTYPEOP: begin
         case (funct3)
           ADDFUNCT3: begin
             case (funct7)
               ADDFUNCT7: result = op1 + op2;
               SUBFUNCT7: result = op1 - op2;
+              MULFUNCT7: result = $signed(op1) * $signed(op2);
               default:   result = {WIDTH{1'b0}};
             endcase
           end
           ANDFUNCT3: result = op1 & op2;
-          ORFUNCT3: result = op1 | op2;
-          XORFUNCT3: result = op1 ^ op2;
+          ORFUNCT3: begin
+            case (funct7)
+              ORFUNCT7:  result = op1 | op2;
+              REMFUNCT7: result = op1 % op2;
+              default:   result = {WIDTH{1'b0}};
+            endcase
+          end
+          XORFUNCT3: begin
+            case (funct7)
+              XORFUNCT7: result = op1 ^ op2;
+              DIVFUNCT7: result = op1 / op2;
+              default:   result = {WIDTH{1'b0}};
+            endcase
+          end
           SLLFUNCT3: result = op1 << op2[SHIFTWIDTH-1:0];
           SRLFUNCT3: begin
             case (funct7)
@@ -42,31 +56,13 @@ module alu #(
               default:   result = {WIDTH{1'b0}};
             endcase
           end
-          SLTFUNCT3: result = ($signed(op1) < $signed(op2)) ? {1'b1} : {WIDTH{1'b0}};
-          SLTUFUNCT3: result = (op1 < op2) ? {1'b1} : {WIDTH{1'b0}};
-          MULFUNCT3: begin
-            case (funct7)  // NOTE: doesn't seem to ever hit this case which is why I get 0
-              MULFUNCT7: result = $signed(op1) * $signed(op2);
-              default:   result = {WIDTH{1'b0}};
-            endcase
-          end
-          DIVFUNCT3: begin
-            case (funct7)
-              DIVFUNCT7: result = op1 / op2;  // Integer division
-              default:   result = {WIDTH{1'b0}};
-            endcase
-          end
-          REMFUNCT3: begin
-            case (funct7)
-              REMFUNCT7: result = op1 % op2;  // Remainder
-              default:   result = {WIDTH{1'b0}};
-            endcase
-          end
+          SLTFUNCT3: result = ($signed(op1) < $signed(op2)) ? {WIDTH{1'b1}} : {WIDTH{1'b0}};
+          SLTUFUNCT3: result = (op1 < op2) ? {WIDTH{1'b1}} : {WIDTH{1'b0}};
           default: result = {WIDTH{1'b0}};
         endcase
       end
 
-      OPIMM: begin
+      ITYPEOP: begin
         case (funct3)
           ADDFUNCT3: result = op1 + op2;
           ANDFUNCT3: result = op1 & op2;
@@ -80,8 +76,8 @@ module alu #(
               default: result = {WIDTH{1'b0}};
             endcase
           end
-          SLTFUNCT3: result = ($signed(op1) < $signed(op2)) ? {1'b1} : {WIDTH{1'b0}};
-          SLTUFUNCT3: result = (op1 < op2) ? {1'b1} : {WIDTH{1'b0}};
+          SLTFUNCT3: result = ($signed(op1) < $signed(op2)) ? {WIDTH{1'b1}} : {WIDTH{1'b0}};
+          SLTUFUNCT3: result = (op1 < op2) ? {WIDTH{1'b1}} : {WIDTH{1'b0}};
           default: result = {WIDTH{1'b0}};
         endcase
       end

@@ -1,42 +1,21 @@
-# Verilator settings
 VERILATOR = verilator
-VFLAGS = -Wall -Wno-fatal --binary --trace --exe --build --timing --timescale "1ns/1ps" -sv
+VERILATOR_FLAGS = -Wall -Wno-UNUSED --trace --timing -I./include
 
-# UVM settings
-# UVM_DIR = ./uvm_src/src
-# UVM_FILES = $(UVM_DIR)/uvm_pkg.sv $(UVM_DIR)/uvm_macros.svh
-# UVM_INCLUDE = -I$(UVM_DIR)
+SRC_FILES = src/alu.sv verification/tb_alu.sv
+WRAP_FILE = verification/tb_alu_wrap.cpp
 
-# Source files
-SRC_DIR = ./src
-TB_DIR = ./verification
-INCLUDE_DIR = ./include
+EXECUTABLE = alu_sim
 
-TB_FILES = $(TB_DIR)/tb_alu.sv
-SRC_FILES = $(SRC_DIR)/alu.sv
+all: $(EXECUTABLE)
 
-# Output settings
-OUTPUT_DIR = ./obj_dir
-TOP_MODULE = tb_alu
-EXE_NAME = simv
+$(EXECUTABLE): $(SRC_FILES) $(WRAP_FILE)
+	$(VERILATOR) $(VERILATOR_FLAGS) --cc --exe --build -j 0 -top-module tb_alu $(SRC_FILES) $(WRAP_FILE)
+	cp obj_dir/Vtb_alu $(EXECUTABLE)
 
-# Default target
-.PHONY: all
-all: $(EXE_NAME)
+run: $(EXECUTABLE)
+	./$(EXECUTABLE)
 
-# Build the Verilator executable
-$(EXE_NAME): $(SRC_FILES) $(TB_FILES)
-	$(VERILATOR) $(VFLAGS)  \
-		--Mdir $(OUTPUT_DIR) -I$(INCLUDE_DIR) \
-		--top-module $(TOP_MODULE) \
-		-o $(EXE_NAME)  $(SRC_FILES) $(TB_FILES)
-
-# Clean build files
-.PHONY: clean
 clean:
-	rm -rf $(OUTPUT_DIR) $(EXE_NAME)
+	rm -rf obj_dir $(EXECUTABLE) *.vcd
 
-# Run the simulation
-.PHONY: run
-run: $(EXE_NAME)
-	./$(EXE_NAME) +trace
+.PHONY: all run clean
