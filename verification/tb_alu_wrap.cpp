@@ -1,4 +1,4 @@
-#include "Vtb_alu.h"
+#include "../obj_dir/Vtb_alu.h"
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
   tb->trace(tfp, 99);
   tfp->open("dump.vcd");
 
-  while (!Verilated::gotFinish() && main_time < 1000) {
+  while (!Verilated::gotFinish() && main_time < 1000000) {
     tb->eval();
     tfp->dump(main_time);
     main_time++;

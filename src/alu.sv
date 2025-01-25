@@ -56,8 +56,9 @@ module alu #(
               default:   result = {WIDTH{1'b0}};
             endcase
           end
-          SLTFUNCT3: result = ($signed(op1) < $signed(op2)) ? {WIDTH{1'b1}} : {WIDTH{1'b0}};
-          SLTUFUNCT3: result = (op1 < op2) ? {WIDTH{1'b1}} : {WIDTH{1'b0}};
+          SLTFUNCT3:
+          result = ($signed(op1) < $signed(op2)) ? {{WIDTH - 1{1'b0}}, 1'b1} : {WIDTH{1'b0}};
+          SLTUFUNCT3: result = (op1 < op2) ? {{WIDTH - 1{1'b0}}, 1'b1} : {WIDTH{1'b0}};
           default: result = {WIDTH{1'b0}};
         endcase
       end
@@ -76,8 +77,9 @@ module alu #(
               default: result = {WIDTH{1'b0}};
             endcase
           end
-          SLTFUNCT3: result = ($signed(op1) < $signed(op2)) ? {WIDTH{1'b1}} : {WIDTH{1'b0}};
-          SLTUFUNCT3: result = (op1 < op2) ? {WIDTH{1'b1}} : {WIDTH{1'b0}};
+          SLTFUNCT3:
+          result = ($signed(op1) < $signed(op2)) ? {{WIDTH - 1{1'b0}}, 1'b1} : {WIDTH{1'b0}};
+          SLTUFUNCT3: result = (op1 < op2) ? {{WIDTH - 1{1'b0}}, 1'b1} : {WIDTH{1'b0}};
           default: result = {WIDTH{1'b0}};
         endcase
       end
