@@ -3,12 +3,12 @@
 module alu #(
     parameter WIDTH = 32
 ) (
-    input logic [WIDTH-1:0] op1,
-    input logic [WIDTH-1:0] op2,
+    input wire logic [WIDTH-1:0] op1,
+    input wire logic [WIDTH-1:0] op2,
     output logic [WIDTH-1:0] result,
-    input logic [6:0] opcode,
-    input logic [2:0] funct3,
-    input logic [6:0] funct7,
+    input wire logic [6:0] opcode,
+    input wire logic [2:0] funct3,
+    input wire logic [6:0] funct7,
     output logic zero,
     output logic status
 );
