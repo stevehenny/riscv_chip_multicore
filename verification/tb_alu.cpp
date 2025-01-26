@@ -1,5 +1,5 @@
 #include "../include/opcode_constants.h" // Include the new header file
-#include "../obj_dir/Valu.h"
+#include "../obj_alu/Valu.h"
 #include <iostream>
 #include <stdexcept>
 #include <verilated.h>
