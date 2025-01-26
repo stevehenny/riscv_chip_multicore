@@ -1,21 +1,24 @@
+# Define variables
 VERILATOR = verilator
-VERILATOR_FLAGS = -Wall -Wno-UNUSED --trace --timing -I./include -DVL_DEBUG
+VERILATOR_FLAGS = -cc -I./include/
+TRACE_FLAGS = -Wall -Wno-UNUSED --trace --exe --build
+SRC = src/alu.sv
+TB_CPP = verification/tb_alu.cpp
+EXECUTABLE = obj_dir/Vtb_alu
 
-SRC_FILES = src/alu.sv verification/tb_alu.sv
-WRAP_FILE = verification/tb_alu_wrap.cpp
+# Default target
+.PHONY: all
+all: alu_sim
 
-EXECUTABLE = alu_sim
+# Target for building the Verilator executable
+alu_sim: $(EXECUTABLE)
 
-all: $(EXECUTABLE)
+$(EXECUTABLE): $(SRC) $(TB_CPP)
+	$(VERILATOR) $(VERILATOR_FLAGS) $(SRC)
+	$(VERILATOR) $(TRACE_FLAGS) -cc $(TB_CPP) $(SRC)
 
-$(EXECUTABLE): $(SRC_FILES) $(WRAP_FILE)
-	$(VERILATOR) $(VERILATOR_FLAGS) --cc --binary --build -j 0 -top-module tb_alu $(SRC_FILES) #$(WRAP_FILE)
-	cp obj_dir/Vtb_alu $(EXECUTABLE)
-
-run: $(EXECUTABLE)
-	./$(EXECUTABLE)
-
+# Clean target
+.PHONY: clean
 clean:
-	rm -rf obj_dir $(EXECUTABLE) *.vcd
-
-.PHONY: all run clean
+	@rm -rf obj_dir
+	@rm -f alu_sim

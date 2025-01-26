@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-
+`include "../include/opcode_constants.sv"
 module alu #(
     parameter WIDTH = 32
 ) (

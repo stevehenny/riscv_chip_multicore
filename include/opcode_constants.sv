@@ -22,5 +22,7 @@ localparam SLTUFUNCT3 = 3'b011;
 localparam SLTUFUNCT7 = 7'b0000000;
 localparam MULFUNCT3 = 3'b000;
 localparam MULFUNCT7 = 7'b0000001;
+localparam DIVFUNCT3 = 3'b100;
 localparam DIVFUNCT7 = 7'b0000001;
+localparam REMFUNCT3 = 3'b110;
 localparam REMFUNCT7 = 7'b0000001;
