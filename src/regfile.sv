@@ -6,7 +6,6 @@ module regfile (
     input wire logic [4:0] readReg1,
     input wire logic [4:0] readReg2,
     input wire logic [4:0] writeReg,
-    input wire logic [31:0] readData,
     input wire logic [31:0] writeData,
     output logic [31:0] readData1,
     output logic [31:0] readData2
