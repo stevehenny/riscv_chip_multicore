@@ -1,6 +1,6 @@
 # Verilator settings
 VERILATOR = verilator
-VERILATOR_FLAGS = -cc -I./include --trace --exe --build
+VERILATOR_FLAGS = -cc -I./include --trace --exe --build --coverage -o simv
 
 # ALU simulation settings
 ALU_SRC = src/alu.sv

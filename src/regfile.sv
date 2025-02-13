@@ -1,5 +1,3 @@
-`timescale 1ns / 1ps
-
 module regfile (
     input wire logic clk,
     input wire logic write,
@@ -12,8 +10,7 @@ module regfile (
 );
 
   // Declare a register file logical array (32 words of 32 bit length)
-  logic [31:0] register[32];
-
+  logic [31:0] register[31:0];
 
   // Init the 32 words with 0
   integer i;
@@ -23,19 +20,17 @@ module regfile (
     end
   end
 
+  // **Combinational Read Logic** (reads happen immediately)
+  always_comb begin
+    readData1 = register[readReg1];
+    readData2 = register[readReg2];
+  end
 
-  // synchronous read and write regfile
-  always_ff @(clk) begin : regfile
-    readData1 <= register[readReg1];
-    readData2 <= register[readReg2];
-
-    // going to keep important data in r0
+  // **Synchronous Write Logic**
+  always_ff @(posedge clk) begin
     if (write && writeReg != 0) begin
       register[writeReg] <= writeData;
-      if (readReg1 == writeReg) readData1 <= writeData;
-      if (readReg2 == writeReg) readData2 <= writeData;
     end
   end
 
 endmodule
-
