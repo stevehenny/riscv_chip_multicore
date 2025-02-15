@@ -14,9 +14,14 @@ TB_REGFILE_CPP = verification/tb_regfile.cpp
 REGFILE_OBJ_DIR = obj_regfile
 REGFILE_EXECUTABLE = $(REGFILE_OBJ_DIR)/Vtb_regfile
 
+L1_CACHE_SRC = src/l1_cache.sv 
+TB_L1_CACHE_CPP = verification/tb_l1_cache.cpp
+L1_CACHE_OBJ_DIR = obj_l1_cache
+L1_CACHE_EXECUTABLE = $(L1_CACHE_OBJ_DIR)/Vtb_l1_cache
+
 # Default target
 .PHONY: all
-all: alu_sim regfile_sim
+all: alu_sim regfile_sim l1_cache_sim
 
 # ALU simulation target
 alu_sim: $(ALU_EXECUTABLE)
@@ -29,6 +34,11 @@ regfile_sim: $(REGFILE_EXECUTABLE)
 
 $(REGFILE_EXECUTABLE): $(REGFILE_SRC) $(TB_REGFILE_CPP)
 	$(VERILATOR) $(VERILATOR_FLAGS) --Mdir $(REGFILE_OBJ_DIR) $(REGFILE_SRC) $(TB_REGFILE_CPP)
+
+l1_cache_sim: $(L1_CACHE_EXECUTABLE)
+
+$(L1_CACHE_EXECUTABLE): $(L1_CACHE_SRC) $(TB_L1_CACHE_CPP)
+	$(VERILATOR) $(VERILATOR_FLAGS) --Mdir $(L1_CACHE_OBJ_DIR) $(L1_CACHE_SRC) $(TB_L1_CACHE_CPP)
 
 # Clean target
 .PHONY: clean

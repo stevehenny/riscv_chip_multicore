@@ -1,13 +1,3 @@
-
-/************************************************************
-* This is a simple l1_cache for the main cpu pipeline
-* Author: Stephen Henstrom
-*************************************************************/
-
-`define CACHE_SETS 64
-`define BLOCK_SIZE 32
-`define ASSOCIATIVITY 2
-
 module l1_cache (
     input logic clk,
     reset,
@@ -19,22 +9,25 @@ module l1_cache (
     output logic hit
 );
 
+  `define CACHE_SETS 64
+  `define BLOCK_SIZE 32
+  `define ASSOCIATIVITY 2
+
   localparam byte INDEX_BITS = 6;
   localparam byte OFFSET_BITS = 5;
   localparam byte TAG_BITS = 32 - INDEX_BITS - OFFSET_BITS;
 
+  logic [`CACHE_SETS-1:0][`ASSOCIATIVITY-1:0][TAG_BITS-1:0] tag_array;
+  logic [`CACHE_SETS-1:0][`ASSOCIATIVITY-1:0][31:0] data_array;
+  logic [`CACHE_SETS-1:0][`ASSOCIATIVITY-1:0] valid_bits;
+  logic [`CACHE_SETS-1:0] lru_bit;
 
-  logic [CACHE_SETS-1:0][ASSOCIATIVITY-1:0][TAG_BITS-1:0] tag_array;
-  logic [CACHE_SETS-1:0][ASSOCIATIVITY-1:0][31:0] data_array;
-  logic [CACHE_SET-1:0][ASSOCIATIVITY-1:0] valid_bits;
-  logic [CACHE_SET-1:0] lru_bit;
-
-  wire [TAG_BITS-1:0] tag = addr[31:INDEX_BITS+OFFSET_BITS];
-  wire [INDEX_BITS-1:0] index = addr[INDEX_BITS+OFFSET_BITS-1:OFFSET_BITS];
-  wire [OFFSET_BITS-1:0] offset = addr[OFFSET_BITS-1:0];
+  wire [TAG_BITS-1:0] tag = addr[31-:TAG_BITS];
+  wire [INDEX_BITS-1:0] index = addr[INDEX_BITS+OFFSET_BITS-1-:INDEX_BITS];
+  wire [OFFSET_BITS-1:0] offset = addr[OFFSET_BITS-1-:OFFSET_BITS];
 
   integer i;
-
+  integer replace_way;
   always_ff @(posedge clk or posedge reset) begin
     if (reset) begin
       for (i = 0; i < `CACHE_SETS; i++) begin
@@ -59,7 +52,6 @@ module l1_cache (
           hit <= 0;  // Cache miss
         end
       end
-
       if (wr) begin
         if (hit_way0) begin
           data_array[index][0] <= wdata;
@@ -69,11 +61,11 @@ module l1_cache (
           hit <= 1;
         end else begin
           hit <= 0;  // Cache miss
-          int replace_way = lru_bit[index];  // Use LRU to replace
+          replace_way = int'(lru_bit[index]);  // Use LRU to replace
           data_array[index][replace_way] <= wdata;
           tag_array[index][replace_way] <= tag;
           valid_bits[index][replace_way] <= 1;
-          lru_bit[index] <= ~replace_way;  // Swap LRU bit
+          lru_bit[index] <= ~replace_way[0];  // Ensure 1-bit assignment
         end
       end
     end

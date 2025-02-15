@@ -1,3 +1,4 @@
 obj_alu/
 obj_regfile/
 coverage_annotated/
+obj_l1_cache/
