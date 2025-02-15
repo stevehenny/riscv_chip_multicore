@@ -109,7 +109,9 @@ int main(int argc, char **argv) {
 
   // Run full coverage tests
   try {
-    full_coverage_test(dut, trace);
+    for (int i = 0; i < 20; ++i) {
+      full_coverage_test(dut, trace);
+    }
   } catch (const std::runtime_error &e) {
     printf("[FAIL] Test failed: %s\n", e.what());
     trace->close();

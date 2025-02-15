@@ -2,3 +2,5 @@ CompileFlags:
   Add: 
     - -I/usr/share/verilator/include
     - -I/usr/share/verilator/include/vltstd
+    - -I./obj_regfile/ 
+    - -I./obj_alu/
